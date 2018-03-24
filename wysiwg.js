@@ -12,56 +12,33 @@ document.write('.' + pjn + '{background:#ddd;display:block;width:100%;height:20v
 document.write('.' + pjn + '-body{background:#ddf;min-height:10rem;}');
 document.write('</style>');
 
-/*
-let textareas = document.querySelectorAll('.' + pjn);
-
-let editorTemplate = '<div class="' + pjn + '-editor"><ul></ul><div class="' + pjn + '-body"></div></div>';
-let switchLinkTemplate = '<a class="switch-link" href="#">switch</a>';
-
-// init...
-(() => {
-  for(let textarea of textareas){
-
-    let inputOrigin = textarea.innerHTML.replace(/&lt;/g , '<').replace(/&gt;/g , '>');
-
-    textarea.insertAdjacentHTML('beforebegin', editorTemplate);
-    textarea.insertAdjacentHTML('afterend', switchLinkTemplate);
-
-    textarea.previousElementSibling.querySelector('.' + pjn + '-body').innerHTML = inputOrigin;
-    textarea.previousElementSibling.querySelector('.' + pjn + '-body').contentEditable = true;
-
-    textarea.style.display = 'none';
-
-textarea.previousElementSibling.querySelector('.' + pjn + '-body').addEventListener(
-  'click',
-  function(){
-    fromEditorToTextarea(this.innerHTML);
-  }
-);
-
-    
-  
-  }
-})()
-*/
+// init editor
 class editorInit {
 
   constructor(textarea){
     this.textarea = textarea;
     this.editorTemplate = '<div class="' + pjn + '-editor"><ul></ul><div class="' + pjn + '-body"></div></div>';
-    this.switchLinkTemplate = 'my link';
+    this.switchLinkTemplate = '<a class="switch-link" href="#">switch</a>';
     this.editorBody = '';
   }
 
   get buildEditor() {
     this.buildToolBar();
+    this.editorBody = this.textarea.previousElementSibling.querySelector('.' + pjn + '-body');
     this.buildSwitchLink();
     this.fromTextAreaToEditor();
+
+    let fromEditorToTextarea = this.fromEditorToTextarea;
+    let textarea = this.textarea;
+    this.editorBody.addEventListener('keyup', function(){
+      fromEditorToTextarea(this.innerHTML, textarea);
+    });
   }
 
   buildToolBar(){
     this.textarea.insertAdjacentHTML('beforebegin', this.editorTemplate);
     this.editorBody = this.textarea.previousElementSibling.querySelector('.' + pjn + '-body');
+    this.editorBody.contentEditable = true;
   }
 
   buildSwitchLink(){
@@ -73,6 +50,10 @@ class editorInit {
     this.editorBody.innerHTML = inputOrigin;
   }
 
+  fromEditorToTextarea(source, target){
+    target.innerHTML = source;
+  }
+
 }
 
 for (let textarea of document.querySelectorAll('.' + pjn)) {
@@ -81,19 +62,6 @@ for (let textarea of document.querySelectorAll('.' + pjn)) {
   editorInstance.buildEditor;
 
 }
-// var test = new editorInit(document.querySelector('.' + pjn));
-// test.buildEditor;
-
-// switch link
-
-
-
-// save
-function fromEditorToTextarea(arg){
-  console.log(arg);
-}
-
-
 
 // buttons
 class editorButton { 
