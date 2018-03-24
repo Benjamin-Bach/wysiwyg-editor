@@ -23,7 +23,7 @@ class editorInit {
   }
 
   get buildEditor() {
-    this.buildToolBar();
+    this.buildToolsBar();
     this.editorBody = this.textarea.previousElementSibling.querySelector('.' + pjn + '-body');
     this.buildSwitchLink();
     this.fromTextAreaToEditor();
@@ -35,7 +35,7 @@ class editorInit {
     });
   }
 
-  buildToolBar(){
+  buildToolsBar(){
     this.textarea.insertAdjacentHTML('beforebegin', this.editorTemplate);
     this.editorBody = this.textarea.previousElementSibling.querySelector('.' + pjn + '-body');
     this.editorBody.contentEditable = true;
@@ -57,15 +57,24 @@ class editorInit {
 }
 
 for (let textarea of document.querySelectorAll('.' + pjn)) {
-
-  let editorInstance = new editorInit(textarea);
-  editorInstance.buildEditor;
-
+  new editorInit(textarea).buildEditor;
 }
 
 // buttons
 class editorButton { 
+
   constructor(name) { 
-    this.name  = name; 
-   }
- }
+    this.name  = name;
+    this.toolsBars = document.querySelectorAll('.' + pjn + '-editor ul');
+  }
+
+  get buildButton() {
+    for (let toolsBar of this.toolsBars) {
+      toolsBar.innerHTML = toolsBar.innerHTML + '<li>' + this.name + '</li>';
+    }
+  }
+
+}
+
+new editorButton('test').buildButton;
+new editorButton('test 2').buildButton;
