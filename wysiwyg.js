@@ -1,5 +1,16 @@
 "use strict"
 
+// tools
+function getMP(obj){
+	for(let item in obj){
+		if(typeof obj[item] == 'function'){
+			console.log('fn :' + item);
+		}else{
+			console.log(item + ' : ' + obj[item]);
+		}
+	}
+}
+
 
 const pjn = 'wysiwyg'; // project name
 
@@ -85,5 +96,7 @@ new editorButton('italic').buildButton;
 new editorButton('bold').buildButton;
 
 document.onmouseup = document.onkeyup = document.onselectionchange = function() {
-  console.log(window.getSelection());
+  // let selected = window.getSelection().anchorNode.parentNode.tagName;
+  let selected = window.getSelection().anchorNode.parentNode;
+  getMP(selected);
 };
