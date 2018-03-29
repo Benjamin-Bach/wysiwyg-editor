@@ -2,11 +2,15 @@
 
 // tools
 function getMP(obj){
-	for(let item in obj){
-		if(typeof obj[item] == 'function'){
-			console.log('fn :' + item);
-		}else{
-			console.log(item + ' : ' + obj[item]);
+	if(typeof obj == 'string'){
+		console.log(obj);
+	}else{
+		for(let item in obj){
+			if(typeof obj[item] == 'function'){
+				console.log('fn :' + item);
+			}else{
+				console.log(item + ' : ' + obj[item]);
+			}
 		}
 	}
 }
@@ -30,10 +34,18 @@ class editorInit {
     this.buildSwitchLink();
     this.fromTextAreaToEditor();
 
-    let fromEditorToTextarea = this.fromEditorToTextarea;
-    let textarea = this.textarea;
-    this.editorBody.addEventListener('keyup', function(){
-      fromEditorToTextarea(this.innerHTML, textarea);
+    // let fromEditorToTextarea = this.fromEditorToTextarea;
+    // let textarea = this.textarea;
+    let $this = this;
+    this.editorBody.addEventListener('keyup', function(e){
+    	$this.fromEditorToTextarea(this.innerHTML, $this.textarea);
+    	// $this.saveSelected(e);
+    });
+    document.addEventListener('mouseup', function(e){
+    	// $this.saveSelected(e);
+    });
+    document.addEventListener('selectionchange', function(e){
+    	$this.saveSelected(e);
     });
   }
 
@@ -54,6 +66,14 @@ class editorInit {
 
   fromEditorToTextarea(source, target){
     target.innerHTML = source;
+  }
+  
+  saveSelected(event){
+  	let selected = document.getSelection();
+  	let range = selected.getRangeAt(0);
+  	let parentTagName = window.getSelection().anchorNode.parentNode.tagName;
+  	getMP(range);
+  	getMP(event.type);
   }
 
 }
@@ -84,19 +104,7 @@ class editorButton {
     }
   }
 
-  getSelected($this){
-      let selected = document.getSelection();
-      let range = selected.getRangeAt(0);
-      console.log(range);
-  }
-
 }
 
 new editorButton('italic').buildButton;
 new editorButton('bold').buildButton;
-
-document.onmouseup = document.onkeyup = document.onselectionchange = function() {
-  // let selected = window.getSelection().anchorNode.parentNode.tagName;
-  let selected = window.getSelection().anchorNode.parentNode;
-  getMP(selected);
-};
